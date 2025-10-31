@@ -353,7 +353,7 @@ mod tests {
 
     #[test]
     fn test_template_contains_id_and_modulusbits() {
-        let (id, attrs) = RsaPubKey::template();
+        let attrs = RsaPubKey::template();
         // id should match the Attribute::Id in attrs
         let found_id_attr = attrs
             .iter()
