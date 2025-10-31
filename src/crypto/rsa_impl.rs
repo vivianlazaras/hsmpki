@@ -25,7 +25,7 @@ impl<'a, P: PublicKey> PublicKeyData for RsaKey<'a, P> {
     }
 
     fn algorithm(&self) -> &'static SignatureAlgorithm {
-        &self.pubkey.algorithm()
+        self.pubkey.algorithm()
     }
 }
 
@@ -109,8 +109,8 @@ impl PublicKey for RsaPubKey {
         let mut id_opt: Option<Uuid> = None;
         for attr in attrs.iter() {
             match attr {
-                Attribute::Modulus(modulus) => n = Some(BigUint::from_bytes_be(&modulus)),
-                Attribute::PublicExponent(exp) => e = Some(BigUint::from_bytes_be(&exp)),
+                Attribute::Modulus(modulus) => n = Some(BigUint::from_bytes_be(modulus)),
+                Attribute::PublicExponent(exp) => e = Some(BigUint::from_bytes_be(exp)),
                 Attribute::Id(id_attr) => {
                     id_opt = Some(Uuid::from_bytes(id_attr.as_slice().try_into()?))
                 }
@@ -122,7 +122,7 @@ impl PublicKey for RsaPubKey {
         }
         let n = n.unwrap();
         let bits = n.bits();
-        let sig_alg_opt = SigAlg::from_rsa_key_bits(bits as usize);
+        let sig_alg_opt = SigAlg::from_rsa_key_bits(bits);
         if sig_alg_opt.is_none() {
             return Err(HsmPkiErr::InvalidKeyBits(bits));
         }
